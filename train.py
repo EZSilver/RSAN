@@ -12,7 +12,7 @@ from misc.LossWrapper import LossWrapper
 import eval_utils
 
 opt = config.parse_opt()
-os.environ['CUDA_VISIBLE_DEVICES'] = opt.gpu
+os.environ['CUDA_VISIBLE_DEVICES'] = 0#opt.gpu
 
 def load_label(input_label2id):
     label2id = json.load(open(input_label2id, 'r'))
