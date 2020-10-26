@@ -40,7 +40,7 @@ def train(opt):
     infos = {}
     histories = {}
 
-    Model = model.setup(opt).cuda()
+    Model = model.setup(opt)
     LW_model = LossWrapper(Model, opt)
     # DP_lw_model = torch.nn.DataParallel(LW_model)
     LW_model.train()
@@ -111,19 +111,19 @@ def train(opt):
             data = data[:-1]
             #print('Read data:', time.time() - start)
 
-            torch.cuda.synchronize()
+            torch.synchronize()
             start = time.time()
-            data = [t.cuda() for t in data]
+            data = [t for t in data]
             sents, rels, labels, poses, chars, sen_lens = data
             if not opt.use_char:
                 chars = None
             if not opt.use_pos:
                 poses = None
-            mask = torch.zeros(sents.size()).cuda()
+            mask = torch.zeros(sents.size())
             for i in range(sents.size(0)):
                 mask[i][:sen_lens[i]] = 1
 
-            mask2 = torch.where(labels == 12, torch.ones_like(sents), torch.ones_like(sents)*10).cuda()
+            mask2 = torch.where(labels == 12, torch.ones_like(sents), torch.ones_like(sents)*10)
             mask2 = mask2.float() * mask.float()
 
             optimizer.zero_grad()
@@ -134,7 +134,7 @@ def train(opt):
             utils.clip_gradient(optimizer, opt.grad_clip)
             optimizer.step()
             train_loss = loss.item()
-            torch.cuda.synchronize()
+            torch.synchronize()
             if iteration % 200 == 0:
                 end = time.time()
                 print("iter {} (epoch {}), train_loss = {:.3f}, time/batch = {:.3f}" \
