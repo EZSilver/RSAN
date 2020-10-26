@@ -14,7 +14,7 @@ def parse_opt():
 
     parser.add_argument('--model', type=str, default='Rel_based_labeling', help='model name')
     parser.add_argument('--root', type=str, default='data/multiNYT', help='path to the dataset')
-    parser.add_argument('--gpu', type=str, default='1', help='gpu ids')
+    parser.add_argument('--gpu', type=str, default='0', help='gpu ids')
 
     parser.add_argument('--use_pos', action='store_true', default=False, help='whether to use pos embedding')
     parser.add_argument('--pos_embedding_size', type=int, default=30, help='the dimension of pos')
