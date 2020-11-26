@@ -38,7 +38,8 @@ class DataPrepare(object):
     def prepare(self):
         print('loading data ...')
 
-        train_pos_f, train_pos_l, train_neg_f, train_neg_l = self.process_train(self.train_data)
+        train_pos_f, train_pos_l, train_neg_f, train_neg_l = self.process_train(self.train_data) ##sentText, entityMentions([tes, relationMentions(['em1Text'], ['em2Text'], ['label'])
+        #rel2id, pos2id, label2id, char2id --> rel2id, char 새로 만들기, label2id = 그대로, pos = ??
         with open(os.path.join(''+self.opt.root, 'train_pos_features.pkl'), 'wb') as f:
             pickle_dump(train_pos_f, f)
         with open(os.path.join(''+self.opt.root, 'train_pos_len.pkl'), 'wb') as f:
@@ -119,6 +120,7 @@ class DataPrepare(object):
         return np.array(features), np.array(sen_len)
 
     def process_train(self, dataset):
+        ##sentText, entityMentions, relationMentions
         positive_features = []
         positive_lens = []
         negative_features = []
@@ -131,6 +133,7 @@ class DataPrepare(object):
             negative_len = []
             sent_text = data['sentText']
             # sent_chars : (max_len, max_word_len)
+
             sent_words, sent_ids, pos_ids, sent_chars, cur_len = self.process_sentence(sent_text)
             entities_ = data['entityMentions']
             entities = []
