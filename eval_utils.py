@@ -69,6 +69,7 @@ def evaluate(model, loader, label2id, batch_size, rel_num, prefix):
                 target = gts[i]
                 predictions.append(triple)
                 targets.append(target)
+                print(triple, target)
 
                 if n - batch_size + i + 1 <= val_num:
                     '''
