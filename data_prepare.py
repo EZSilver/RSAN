@@ -241,6 +241,32 @@ class DataPrepare(object):
         sent_ids = [self.word2id.get(w, 1) for w in sent_words][:sen_len]
 
         sent_chars = []
+
+        for w in sent_words[:sen_len]: #w = 토크나이즈된 한 단어
+            list_w = list(w)
+            if '_갑_' in w:
+                index = list_w.index('_')
+                list_w[index: index + 3] = [''.join(list_w[index: index + 3])]
+            if '_을_' in w:
+                index = list_w.index('_')
+                list_w[index: index + 3] = [''.join(list_w[index: index + 3])]
+            if '_제삼자_' in w:
+                index = list_w.index('_')
+                list_w[index: index + 5] = [''.join(list_w[index: index + 5])]
+
+            tokens = [self.char2id.get(token, 1) for token in list_w]
+            word_len = min(len(tokens), self.opt.max_word_len)
+            for _ in range(self.opt.max_word_len - word_len):
+                tokens.append(0)
+            sent_chars.append(tokens[: self.opt.max_word_len])
+
+        for _ in range(sen_len, self.opt.max_len):
+            sent_ids.append(0)
+            sent_pos_ids.append(0)
+            sent_chars.append([0] * self.opt.max_word_len)
+        return sent_words[:sen_len], sent_ids, sent_pos_ids, sent_chars, sen_len
+
+        '''
         for w in sent_words[:sen_len]:
             tokens = [self.char2id.get(token, 1) for token in list(w)]
             word_len = min(len(tokens), self.opt.max_word_len)
@@ -253,7 +279,7 @@ class DataPrepare(object):
             sent_pos_ids.append(0)
             sent_chars.append([0] * self.opt.max_word_len)
         return sent_words[:sen_len], sent_ids, sent_pos_ids, sent_chars, sen_len
-
+        '''
 opt = config.parse_opt()
 Prepare = DataPrepare(opt)
 Prepare.prepare()
